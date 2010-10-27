@@ -1,8 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
 					   xmlns:s="library://ns.adobe.com/flex/spark" 
-					   xmlns:mx="library://ns.adobe.com/flex/mx">
-	<fx:Declarations>
-		<!-- Place non-visual elements (e.g., services, value objects) here -->
-	</fx:Declarations>
+					   xmlns:mx="library://ns.adobe.com/flex/mx"
+					   width="1024"
+					   height="768"
+					   backgroundColor="0x000000"
+					   applicationComplete="init()">
+	<fx:Script>
+		<![CDATA[
+			
+			private var _readPath:File;
+			
+			public function init():void {
+				this.showStatusBar = false;
+				stage.displayState = StageDisplayState.FULL_SCREEN;
+				initImagesDirectory();
+			}
+			
+			private function finishInit():void {
+				
+			}
+			
+			private function initImagesDirectory():void {
+				_readPath = new File();
+				_readPath.addEventListener(Event.SELECT, handleReadDirectory, false, 0, true);
+				_readPath.browseForDirectory("Please select a folder to read images from.");
+			}
+			
+			private function handleReadDirectory(event:Event):void {
+				_readPath = event.target as File;
+				this.finishInit();
+			}
+		]]>
+	</fx:Script>
+	<s:BorderContainer id="container" x="0" y="0" width="100%" height="100%" backgroundColor="#000000">
+	</s:BorderContainer>
 </s:WindowedApplication>
