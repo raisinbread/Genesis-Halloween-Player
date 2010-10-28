@@ -42,6 +42,7 @@ package
 				_file = file;
 				load();
 			} else {
+				_file.deleteFile();
 				_file = file;
 				fadeOut();
 			}
