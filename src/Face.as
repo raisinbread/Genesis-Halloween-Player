@@ -28,7 +28,7 @@ package
 			super();
 			_loader = new Loader();
 			_rect = rect;
-			this.alpha = 0;
+			this.alpha = 1;
 			this.visible = true;
 		}
 		
@@ -37,7 +37,6 @@ package
 		}
 		
 		public function animateWithFaceFile(file:File):void {
-			this.alpha = 1;
 			_file = file;
 			var fileRequest:URLRequest = new URLRequest('file://' + file.nativePath);
 			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, handleLoadComplete, false, 0, true);
@@ -53,11 +52,7 @@ package
 		}
 		
 		private function handleLoadComplete(event:Event):void {
-			/*
 			var image:DisplayObject = _loader.content;
-			
-			this.width = image.width;
-			this.height = image.height;
 			
 			var oval:Sprite = new Sprite();
 			var colors:Array = [0x000000, 0x000000];
@@ -77,11 +72,11 @@ package
 			_loader.cacheAsBitmap = true;
 			oval.cacheAsBitmap = true;
 			_loader.mask = oval;
-			*/
-			//addChild(oval);
+
+			addChild(oval);
 			addChild(_loader);
 			
-			//fadeIn();
+			fadeIn();
 		}
 		
 		private function fadeIn():void {
