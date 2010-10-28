@@ -21,7 +21,8 @@ package
 		private var _file:File = null;
 		private var _loader:Loader;
 		private var _bobDistance:uint = 25;
-		private var _bobTime:uint = 5;
+		private var _bobTime:uint = 1;
+		private var _bobbing:Boolean = false;
 		
 		public function Face(rect:Rectangle)
 		{
@@ -37,10 +38,13 @@ package
 		}
 		
 		public function animateWithFaceFile(file:File):void {
-			_file = file;
-			var fileRequest:URLRequest = new URLRequest('file://' + file.nativePath);
-			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, handleLoadComplete, false, 0, true);
-			_loader.load(fileRequest);
+			if(_file == null) {
+				_file = file;
+				load();
+			} else {
+				_file = file;
+				fadeOut();
+			}
 		}
 		
 		public function hasFile(file:File):Boolean {
@@ -49,6 +53,12 @@ package
 			} else {
 				return file.nativePath == _file.nativePath;
 			}
+		}
+		
+		private function load():void {
+			var fileRequest:URLRequest = new URLRequest('file://' + _file.nativePath);
+			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, handleLoadComplete, false, 0, true);
+			_loader.load(fileRequest);
 		}
 		
 		private function handleLoadComplete(event:Event):void {
@@ -79,6 +89,11 @@ package
 			fadeIn();
 		}
 		
+		private function loadAndFadeIn():void {
+			load();
+			fadeIn();
+		}
+		
 		private function fadeIn():void {
 		trace("Fading in...");
 			var myTimeline:TimelineLite = new TimelineLite({paused:true});
@@ -88,16 +103,23 @@ package
 			myTimeline.append(TweenLite.to(this, Math.floor(5 + Math.random() * 10), {scaleX:2, scaleY:2, ease:Bounce.easeInOut}));
 			myTimeline.play();
 			
-			bobLeft();
+			if(!_bobbing) {
+				bobRight();
+				_bobbing = true;
+			}			
+		}
+		
+		private function fadeOut():void {
+			TweenLite.to(this, Math.floor(2 + Math.random() * 2), {alpha:0, onComplete:loadAndFadeIn, ease:Bounce.easeInOut})
 		}
 		
 		private function bobLeft():void {
-			var fudge:uint = Math.floor(Math.random() * 3);
+			var fudge:uint = Math.floor(Math.random() * 2);
 			TweenLite.to(this, _bobTime + fudge, {x:this.x - _bobDistance, onComplete:bobRight, ease:Quad.easeInOut});
 		}
 		
 		private function bobRight():void {
-			var fudge:uint = Math.floor(Math.random() * 3);
+			var fudge:uint = Math.floor(Math.random() * 2);
 			TweenLite.to(this, _bobTime + fudge, {x:this.x + _bobDistance, onComplete:bobLeft, ease:Quad.easeInOut});
 		}
 	}

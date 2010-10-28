@@ -13,7 +13,7 @@
 			private const MAX_FACES:uint = 8;
 			private const FACE_COLS:uint = 4;
 			private const FACE_ROWS:uint = 2;
-			private const FILE_REFRESH_INTERVAL:uint = 1000;
+			private const FILE_REFRESH_INTERVAL:uint = 10000;
 			private var _faces:Array = null;
 			private var _fileTimer:Timer;
 			private var _oldestFaceIndex:uint;
@@ -73,8 +73,10 @@
 					var faceRow:uint = Math.floor((i / MAX_FACES) * FACE_ROWS);
 					var faceCol:uint = i % FACE_COLS;
 					
-					face.x = faceCol * faceXSpacing;
-					face.y = faceRow * faceYSpacing;
+					//Place in the center of its cell
+					face.x = (faceCol * faceXSpacing) + (this.width / (FACE_COLS * 2)) - 80;
+					face.y = (faceRow * faceYSpacing) + (this.height / (FACE_ROWS * 2)) - 100;
+					
 					addElement(face);
 					_faces.push(face);
 				}
