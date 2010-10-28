@@ -10,15 +10,76 @@
 		<![CDATA[
 			
 			private var _readPath:File;
+			private const MAX_FACES:uint = 8;
+			private const FACE_COLS:uint = 4;
+			private const FACE_ROWS:uint = 2;
+			private const FILE_REFRESH_INTERVAL:uint = 1000;
+			private var _faces:Array = null;
+			private var _fileTimer:Timer;
+			private var _oldestFaceIndex:uint;
 			
 			public function init():void {
+				_faces = new Array();
+				
 				this.showStatusBar = false;
-				stage.displayState = StageDisplayState.FULL_SCREEN;
+				//stage.displayState = StageDisplayState.FULL_SCREEN;
 				initImagesDirectory();
 			}
 			
-			private function finishInit():void {
+			private function startUpdatingFileList():void {
+				_fileTimer = new Timer(FILE_REFRESH_INTERVAL);
+				_fileTimer.addEventListener(TimerEvent.TIMER, updateFileList, false, 0, true);
+				_fileTimer.start();
+			}
+			
+			private function updateFileList(event:TimerEvent):void {
+				if(_faces.length == 0) {
+					initFaces();
+				}
 				
+				//Find files that haven't been placed in faces...
+				var directoryFiles:Array = _readPath.getDirectoryListing();
+				var newFiles:Array = new Array();
+				
+				for(var i:uint = 0; i < directoryFiles.length; i++) {
+					var newFile:Boolean = true;
+					trace("Checking file " + i);
+					for(var j:uint = 0; j < _faces.length; j++) {
+						if(_faces[j].hasFile(directoryFiles[i])) {
+							newFile = false;
+						}
+					}
+					if(newFile) {
+						newFiles.push(directoryFiles[i]);
+					}
+				}
+				
+				//Take the list of new files, newest to oldest,
+				//start from the oldest Face, and insert.
+				for(var k:uint = 0; k < newFiles.length; k++) {
+					var index:uint = k % _faces.length;
+					_faces[_oldestFaceIndex].animateWithFaceFile(newFiles[k]);
+					_oldestFaceIndex = (_oldestFaceIndex + 1) % _faces.length;
+				}
+			}
+			
+			private function initFaces():void {
+				
+				var faceXSpacing:Number = this.width / FACE_COLS;
+				var faceYSpacing:Number = this.height / FACE_ROWS;
+				
+				for(var i:uint = 0; i < MAX_FACES; i++) {
+					var face:Face = new Face(new Rectangle(0, 0, this.width, this.height));
+					var faceRow:uint = Math.floor((i / MAX_FACES) * FACE_ROWS);
+					var faceCol:uint = i % FACE_COLS;
+					
+					face.x = faceCol * faceXSpacing;
+					face.y = faceRow * faceYSpacing;
+					addElement(face);
+					_faces.push(face);
+				}
+				
+				_oldestFaceIndex = 0;
 			}
 			
 			private function initImagesDirectory():void {
@@ -29,7 +90,7 @@
 			
 			private function handleReadDirectory(event:Event):void {
 				_readPath = event.target as File;
-				this.finishInit();
+				startUpdatingFileList();
 			}
 		]]>
 	</fx:Script>
