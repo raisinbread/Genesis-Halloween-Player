@@ -22,7 +22,7 @@
 				_faces = new Array();
 				
 				this.showStatusBar = false;
-				//stage.displayState = StageDisplayState.FULL_SCREEN;
+				stage.displayState = StageDisplayState.FULL_SCREEN;
 				initImagesDirectory();
 			}
 			
@@ -74,8 +74,8 @@
 					var faceCol:uint = i % FACE_COLS;
 					
 					//Place in the center of its cell
-					face.x = (faceCol * faceXSpacing) + (this.width / (FACE_COLS * 2)) - 80;
-					face.y = (faceRow * faceYSpacing) + (this.height / (FACE_ROWS * 2)) - 100;
+					face.x = (faceCol * faceXSpacing) + (this.width / (FACE_COLS * 2)) - 180;
+					face.y = (faceRow * faceYSpacing) + (this.height / (FACE_ROWS * 2)) - 210;
 					
 					addElement(face);
 					_faces.push(face);
@@ -96,6 +96,6 @@
 			}
 		]]>
 	</fx:Script>
-	<s:BorderContainer id="container" x="0" y="0" width="100%" height="100%" backgroundColor="#000000">
+	<s:BorderContainer id="container" x="0" y="0" width="100%" height="100%" backgroundColor="#000000" borderWeight="0" borderColor="#000000">
 	</s:BorderContainer>
 </s:WindowedApplication>

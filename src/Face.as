@@ -98,10 +98,10 @@ package
 		private function fadeIn():void {
 		trace("Fading in...");
 			var myTimeline:TimelineLite = new TimelineLite({paused:true});
-			var scaleX:Number = Math.random() + 1;
-			var scaleY:Number = Math.random() + 1;
+			var scaleX:Number = Math.random() + 4;
+			var scaleY:Number = Math.random() + 4;
 			myTimeline.append(TweenLite.to(this, Math.floor(5 + Math.random() * 10), {alpha:1, scaleX:scaleX, scaleY:scaleY, ease:Bounce.easeInOut}));
-			myTimeline.append(TweenLite.to(this, Math.floor(5 + Math.random() * 10), {scaleX:2, scaleY:2, ease:Bounce.easeInOut}));
+			//myTimeline.append(TweenLite.to(this, Math.floor(5 + Math.random() * 10), {scaleX:2, scaleY:2, ease:Bounce.easeInOut}));
 			myTimeline.play();
 			
 			if(!_bobbing) {
